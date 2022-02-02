@@ -1,0 +1,34 @@
+<?php
+
+use Illuminate\Support\Facades\Route;
+//เพื่อเรียกใช้งาน customauthcontroller
+use App\Http\Controllers\CustomAuthController;
+
+/*
+|--------------------------------------------------------------------------
+| Web Routes
+|--------------------------------------------------------------------------
+|
+| Here is where you can register web routes for your application. These
+| routes are loaded by the RouteServiceProvider within a group which
+| contains the "web" middleware group. Now create something great!
+|
+*/
+
+Route::get('/', function () {
+    return view('welcome');
+});
+
+//รับค่า                Call_Controller              function
+Route::get('/login', [CustomAuthController::class,'login'])->middleware('alreadyLoggedIn');
+Route::get('/registration', [CustomAuthController::class,'registration'])->middleware('alreadyLoggedIn');
+//register-user view->register->form action->                                                                                   
+Route::post('/register-user', [CustomAuthController::class,'registerUser'])->name('register-user');
+Route::post('/login-user', [CustomAuthController::class,'loginUser'])->name('login-user');
+//                             dashboard with middleware(AuthCheck)->kernel(name'isLoggedIn') 
+Route::get('/dashboard', [CustomAuthController::class,'dashboard'])->middleware('isLoggedIn');
+Route::get('/logout', [CustomAuthController::class,'logout']);
+
+//ยังไม่ได้ทำ
+Route::get('/editPro/{id}', [CustomAuthController::class,'edit'])->name('editPro')->middleware('isLoggedIn');
+Route::post('/updatePro/{id}', [CustomAuthController::class,'update'])->name('updatePro')->middleware('isLoggedIn');
